@@ -84,6 +84,7 @@ var c = [question1.answers[2], question2.answers[2], question3.answers[2], quest
 
 var d = [question1.answers[3], question2.answers[3], question3.answers[3], question4.answers[3], question5.answers[3]];
 
+
 // Start Game
 
 restart.hide();
@@ -93,6 +94,7 @@ $("#start").click(function() {
 	startQuestion();
 });
 
+// Function to display new questions and answers
 function newPage() {
 
 		var nextQuestion = currentQuestion[current];
@@ -100,44 +102,50 @@ function newPage() {
 
 		var newA = a[current];
 		answer1.html(newA);
-
+	
 		var newB = b[current];
 		answer2.html(newB);
-
+	
 		var newC = c[current];
 		answer3.html(newC);
 
 		var newD = d[current];
 		answer4.html(newD);
+
 }
 
 
 $("#answer1, #answer2, #answer3, #answer4").click(function() {
+	// Grab answer clicked
 	var value = this.innerHTML;
 
+	// If player selects correct answer, show screen congratulating them
 	if (value === currentAnswer[current]) {
 		correct++;
 		correctAnswer.html("Correct!");
 
+		// After a few seconds, display next question
 		setTimeout(function() {
 			correctAnswer.empty();
 			newPage();
 
 		}, 2000);
 
+	// If player chooses wrong answer, tell them they selected wrong option, display correct answer
 	} 
 	else {
 		incorrect++;
 		correctAnswer.html(currentAnswer[current]);
 
+
+		// After a few seconds, display next question
 		setTimeout(function() {
 			correctAnswer.empty();
 			newPage();
-
 		}, 2000);
-		
 	}
 
+	// If last question is reached, stop and return
 	if (current === (currentQuestion.length - 1)) {
 		setTimeout(function(){
 			stop();
@@ -145,8 +153,9 @@ $("#answer1, #answer2, #answer3, #answer4").click(function() {
 		}, 2000);
 	}
 	current++;
-
 });
+
+// Player has a limited amount of time to answer the questions
 
 function timer() {
 	intervalId = setInterval(sixtySeconds, 1000);
@@ -190,6 +199,9 @@ function reset() {
 	totalCorrect.hide();
 	restart.hide();
 }
+
+
+// Show first question until player answers, or time runs out
 
 function startQuestion() {
 	timeRemaining.show();
