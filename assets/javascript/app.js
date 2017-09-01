@@ -11,6 +11,8 @@ $(document).ready(function() {
 
 	var incorrect = 0;
 
+	var current = 0;
+
 	var start = $("#start");
 
 	var restart = $("#reset");
@@ -91,88 +93,51 @@ $("#start").click(function() {
 	startQuestion();
 });
 
-var current = 0;
-$("#answer1, #answer2, #answer3, #answer4").click(function() {
-	// Grab answer clicked
-	console.log(this);
-	var value = this.innerHTML;
-	console.log(value);
+function newPage() {
 
-	// If player selects correct answer, show screen congratulating them
+		var nextQuestion = currentQuestion[current];
+		question.html(nextQuestion);
+
+		var newA = a[current];
+		answer1.html(newA);
+
+		var newB = b[current];
+		answer2.html(newB);
+
+		var newC = c[current];
+		answer3.html(newC);
+
+		var newD = d[current];
+		answer4.html(newD);
+}
+
+
+$("#answer1, #answer2, #answer3, #answer4").click(function() {
+	var value = this.innerHTML;
+
 	if (value === currentAnswer[current]) {
-		console.log(value);
 		correct++;
-		console.log(correct);
 		correctAnswer.html("Correct!");
 
-		// After a few seconds, display next question
 		setTimeout(function() {
 			correctAnswer.empty();
-	
-			var nextQuestion = currentQuestion[current];
-			console.log(nextQuestion);
-			question.html(nextQuestion);
-
-			var newA = a[current];
-			console.log(newA);
-			answer1.html(newA);
-
-		
-			var newB = b[current];
-			console.log(newB);
-			answer2.html(newB);
-
-		
-			var newC = c[current];
-			console.log(newC);
-			answer3.html(newC);
-
-
-			var newD = d[current];
-			console.log(newD);
-			answer4.html(newD);
+			newPage();
 
 		}, 2000);
 
-	// If player chooses wrong answer, tell them they selected wrong option, display correct answer
 	} 
 	else {
 		incorrect++;
-		console.log(incorrect);
 		correctAnswer.html(currentAnswer[current]);
 
-
-		// After a few seconds, display next question
 		setTimeout(function() {
 			correctAnswer.empty();
-	
-			var nextQuestion = currentQuestion[current];
-			console.log(nextQuestion);
-			question.html(nextQuestion);
+			newPage();
 
-			var newA = a[current];
-			console.log(newA);
-			answer1.html(newA);
-
-		
-			var newB = b[current];
-			console.log(newB);
-			answer2.html(newB);
-		
-		
-			var newC = c[current];
-			console.log(newC);
-			answer3.html(newC);
-
-
-			var newD = d[current];
-			console.log(newD);
-			answer4.html(newD);
 		}, 2000);
 		
 	}
 
-	// If last question is reached, stop and return
 	if (current === (currentQuestion.length - 1)) {
 		setTimeout(function(){
 			stop();
@@ -182,8 +147,6 @@ $("#answer1, #answer2, #answer3, #answer4").click(function() {
 	current++;
 
 });
-
-// Player has a limited amount of time to answer the questions
 
 function timer() {
 	intervalId = setInterval(sixtySeconds, 1000);
@@ -228,9 +191,6 @@ function reset() {
 	restart.hide();
 }
 
-
-// Show first question until player answers, or time runs out
-
 function startQuestion() {
 	timeRemaining.show();
 	question.show();
@@ -241,7 +201,6 @@ function startQuestion() {
 	timer();
 	sixtySeconds();
 	timeRemaining.html("<h2> Time Remaining: " + countdown + "</h2>");
-	console.log(timeRemaining);
 	question.html(currentQuestion[0]);
 	answer1.html(question1.answers[0]);
 	answer2.html(question1.answers[1]);
