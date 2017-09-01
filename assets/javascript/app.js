@@ -1,14 +1,19 @@
 $(document).ready(function() {
 
-	var countdown = 61;
-
+	var intervalId;
 	var timer;
 	var sixtySeconds;
 	var stop;
 
+	var countdown = 61;
+
+	var correct = 0;
+
+	var incorrect = 0;
+
 	var start = $("#start");
 
-	var reset = $("#reset");
+	var restart = $("#reset");
 
 	var timeRemaining = $("#timeRemaining");
 
@@ -25,14 +30,6 @@ $(document).ready(function() {
 	var totalIncorrect = $("#totalIncorrect");
 
 	var timeUp = $("#timeUp");
-
-	var intervalId;
-
-	var userGuess = "";
-
-	var correct = 0;
-
-	var incorrect = 0;
 
 	var answer1 = $("#answer1");
 
@@ -76,27 +73,117 @@ var question5 = {
 var currentQuestion = [question1.question, question2.question, question3.question, question4.question, question5.question];
 
 var currentAnswer = [question1.correctAnswer, question2.correctAnswer, question3.correctAnswer, question4.correctAnswer, question5.correctAnswer];
-console.log(currentAnswer[0]);
 
-var selection = [question1.answers, question2.answers, question3.answers, question4.answers];
+var a = [question1.answers[0], question2.answers[0], question3.answers[0], question4.answers[0], question5.answers[0]];
 
-var userGuess = $("#answer1, #answer2, #answer3, #answer4").click(function() {
-	// Grab answer clicked ****
+var b = [question1.answers[1], question2.answers[1], question3.answers[1], question4.answers[1], question5.answers[1]];
 
-});
+var c = [question1.answers[2], question2.answers[2], question3.answers[2], question4.answers[2], question5.answers[2]];
+
+var d = [question1.answers[3], question2.answers[3], question3.answers[3], question4.answers[3], question5.answers[3]];
 
 // Start Game
 
-reset.hide();
-
+restart.hide();
 
 $("#start").click(function() {
 	start.hide();
-	firstQuestion();
+	startQuestion();
 });
 
+var current = 0;
+$("#answer1, #answer2, #answer3, #answer4").click(function() {
+	// Grab answer clicked
+	console.log(this);
+	var value = this.innerHTML;
+	console.log(value);
 
-// Player has a limited amount of time to finish the quiz
+	// If player selects correct answer, show screen congratulating them
+	if (value === currentAnswer[current]) {
+		console.log(value);
+		correct++;
+		console.log(correct);
+		correctAnswer.html("Correct!");
+
+		// After a few seconds, display next question
+		setTimeout(function() {
+			correctAnswer.empty();
+	
+			var nextQuestion = currentQuestion[current];
+			console.log(nextQuestion);
+			question.html(nextQuestion);
+
+			var newA = a[current];
+			console.log(newA);
+			answer1.html(newA);
+
+		
+			var newB = b[current];
+			console.log(newB);
+			answer2.html(newB);
+
+		
+			var newC = c[current];
+			console.log(newC);
+			answer3.html(newC);
+
+
+			var newD = d[current];
+			console.log(newD);
+			answer4.html(newD);
+
+		}, 2000);
+
+	// If player chooses wrong answer, tell them they selected wrong option, display correct answer
+	} 
+	else {
+		incorrect++;
+		console.log(incorrect);
+		correctAnswer.html(currentAnswer[current]);
+
+
+		// After a few seconds, display next question
+		setTimeout(function() {
+			correctAnswer.empty();
+	
+			var nextQuestion = currentQuestion[current];
+			console.log(nextQuestion);
+			question.html(nextQuestion);
+
+			var newA = a[current];
+			console.log(newA);
+			answer1.html(newA);
+
+		
+			var newB = b[current];
+			console.log(newB);
+			answer2.html(newB);
+		
+		
+			var newC = c[current];
+			console.log(newC);
+			answer3.html(newC);
+
+
+			var newD = d[current];
+			console.log(newD);
+			answer4.html(newD);
+		}, 2000);
+		
+	}
+
+	// If last question is reached, stop and return
+	if (current === (currentQuestion.length - 1)) {
+		setTimeout(function(){
+			stop();
+			return;
+		}, 2000);
+	}
+	current++;
+
+});
+
+// Player has a limited amount of time to answer the questions
 
 function timer() {
 	intervalId = setInterval(sixtySeconds, 1000);
@@ -120,179 +207,53 @@ function stop() {
 	question.hide();
 	correctAnswer.hide();
 	answers.hide();
+	timeUp.show();
+	totalCorrect.show();
+	totalIncorrect.show();
 	timeUp.html("Game Over!");
 	totalCorrect.html("Correct Answers: " + correct);
 	totalIncorrect.html("Incorrect Answers: " + incorrect);
-	reset.show();
+	restart.show();
 }
 
-reset.click(function() {
-		reset();
-});
-
 function reset() {
-	reset.hide();
-	firstQuestion();
+	current = 0;
+	correct = 0;
+	incorrect = 0;
+	countdown = 61;
+	start.show();
+	timeUp.hide();
+	totalIncorrect.hide();
+	totalCorrect.hide();
+	restart.hide();
 }
 
 
 // Show first question until player answers, or time runs out
 
-function firstQuestion() {
+function startQuestion() {
+	timeRemaining.show();
+	question.show();
+	correctAnswer.show();
+	answers.show();
 
-	console.log(question1.answers);
 
 	timer();
 	sixtySeconds();
 	timeRemaining.html("<h2> Time Remaining: " + countdown + "</h2>");
+	console.log(timeRemaining);
 	question.html(currentQuestion[0]);
 	answer1.html(question1.answers[0]);
 	answer2.html(question1.answers[1]);
 	answer3.html(question1.answers[2]);
 	answer4.html(question1.answers[3]);
 
-
-	// If player selects correct answer, show screen congratulating them
-	if (userGuess === currentAnswer[0]) {
-		console.log(selection);
-		correct++;
-		console.log(correct);
-		correctAnswer.html("Correct!");
-
-		// After a few seconds, display next question
-		setTimeout(function() {
-			secondQuestion();
-		}, 2000);
-
-		// If player chooses wrong answer, tell them they selected wrong option, display correct answer
-	} else {
-		incorrect++;
-		console.log(incorrect);
-		correctAnswer.html(currentAnswer[0]);
-
-		// After a few seconds, display next question
-		setTimeout(function() {
-			secondQuestion();
-		}, 2000);
-	}
 }
 
-function secondQuestion() {
-	correctAnswer.empty();
-	question.html(currentQuestion[1]);
-	answer1.html(question2.answers[0]);
-	answer2.html(question2.answers[1]);
-	answer3.html(question2.answers[2]);
-	answer4.html(question2.answers[3]);
+restart.click(function() {
+		reset();
+});
 
-	if (userGuess === currentAnswer[1]) {
-		console.log(userGuess);
-		correct++;
-		console.log(correct);
-		correctAnswer.html("Correct!");
-		setTimeout(function() {
-			thirdQuestion();
-		}, 2000);
-
-	} else {
-		incorrect++;
-		console.log(incorrect);
-		correctAnswer.html(currentAnswer[1]);
-		setTimeout(function() {
-			thirdQuestion();
-		}, 2000);
-	}
-}
-
-function thirdQuestion() {
-	correctAnswer.empty();
-	question.html(currentQuestion[2]);
-	answer1.html(question3.answers[0]);
-	answer2.html(question3.answers[1]);
-	answer3.html(question3.answers[2]);
-	answer4.html(question3.answers[3]);
-
-	if (userGuess === currentAnswer[2]) {
-		console.log(userGuess);
-		correct++;
-		console.log(correct);
-		correctAnswer.html("Correct!");
-		setTimeout(function() {
-			fourthQuestion();
-		}, 2000);
-
-	} else {
-		incorrect++;
-		console.log(incorrect);
-		correctAnswer.html(currentAnswer[2]);
-		setTimeout(function() {
-			fourthQuestion();
-		}, 2000);
-	}
-}
-
-function fourthQuestion() {
-	correctAnswer.empty();
-	question.html(currentQuestion[3]);
-	answer1.html(question4.answers[0]);
-	answer2.html(question4.answers[1]);
-	answer3.html(question4.answers[2]);
-	answer4.html(question4.answers[3]);
-
-	if (userGuess === currentAnswer[3]) {
-		console.log(userGuess);
-		correct++;
-		console.log(correct);
-		correctAnswer.html("Correct!");
-		setTimeout(function() {
-			fifthQuestion();
-		}, 2000);
-
-	} else {
-		incorrect++;
-		console.log(incorrect);
-		correctAnswer.html(currentAnswer[3]);
-		setTimeout(function() {
-			fifthQuestion();
-		}, 2000);
-	}
-}
-
-function fifthQuestion() {
-	correctAnswer.empty();
-	question.html(currentQuestion[4]);
-	answer1.html(question5.answers[0]);
-	answer2.html(question5.answers[1]);
-	answer3.html(question5.answers[2]);
-	answer4.html(question5.answers[3]);
-
-	if (userGuess === currentAnswer[4]) {
-		console.log(userGuess);
-		correct++;
-		console.log(correct);
-		correctAnswer.html("Correct!");
-		setTimeout(function() {
-			stop();
-		}, 2000);
-
-	} else {
-		incorrect++;
-		console.log(incorrect);
-		correctAnswer.html(currentAnswer[4]);
-		setTimeout(function() {
-			stop();
-			console.log("done");
-		}, 2000);
-	}
-}
-
-
-
-// Add button hovers
-
-// If player runs out of time, tell them time is up, display correct answer, end game
-
-// On the final screen, show the number of correct answers, incorrect answers, and an option to restart the game (without reloading the page).
 
 });
 
